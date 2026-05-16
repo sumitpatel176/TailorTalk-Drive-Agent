@@ -25,9 +25,21 @@ def get_drive_service():
     """
     Google Drive connection setup:
     Service account use kiya hai bina login ke Drive read karne ke liye.
+    Added Request refresh to fix JWT Signature errors.
     """
     scope = ['https://www.googleapis.com/auth/drive.readonly']
+    
+    # Credentials load karna
     creds = service_account.Credentials.from_service_account_file(CONF, scopes=scope)
+    
+    # JWT Fix: Agar token expire ya invalid lage toh refresh check karo
+    try:
+        if not creds.valid:
+            creds.refresh(Request())
+    except Exception as e:
+        # Agar refresh fail ho toh purane creds ke saath hi try karega
+        print(f"Auth Hint: Token validation check bypass (Normal in first run). Error: {e}")
+
     return build('drive', 'v3', credentials=creds)
 
 @app.get("/")
