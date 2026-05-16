@@ -33,7 +33,8 @@ if prompt := st.chat_input("E.g., Find my Daily Reports..."):
     with st.chat_message("assistant"):
         try:
             # Backend API (FastAPI) ko request bhejna
-            res = requests.get(f"http://127.0.0.1:8001/chat?user_query={prompt}").json()
+            res = requests.get(f"https://tailortalk-backend-2ayw.onrender.com/chat?user_query={prompt}").json()
+            
             
             # [CONVERSATIONAL NATURE] - Gemini ka friendly message dikhana
             bot_msg = res.get("message", "Processing your request...")
